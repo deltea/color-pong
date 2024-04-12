@@ -9,8 +9,12 @@
   import { type Palette, palettes } from "$lib/palettes";
 
   let canvas: HTMLCanvasElement;
-  let colorCircles: HTMLDivElement[] = [];
-  let scoreText: HTMLElement[] = [];
+  let scores = [0, 0, 0, 0];
+  let paletteIndex = Math.floor(Math.random() * palettes.length);
+  let palette: Palette = palettes[paletteIndex];
+
+  let balls: Ball[];
+  let squares: string[][] = [[]];
 
   const SQUARE_SIZE = 10;
   const BALL_SPEED_RANGE = 50;
@@ -20,69 +24,56 @@
     const numSquaresX = canvas.width / SQUARE_SIZE;
     const numSquaresY = canvas.height / SQUARE_SIZE;
 
-    const squares: [string[]] = [[]];
-
     let ctx: CanvasRenderingContext2D = canvas.getContext("2d") as CanvasRenderingContext2D;
-    let palette: Palette = palettes[Math.floor(Math.random() * palettes.length)];
-    let targetSpeedScale = 1;
-    let speedScale = 0;
 
-    // Set color displays
-    colorCircles[0].style.backgroundColor = palette.color1;
-    colorCircles[1].style.backgroundColor = palette.color2;
-    colorCircles[2].style.backgroundColor = palette.color3;
-    colorCircles[3].style.backgroundColor = palette.color4;
-
-    const balls: Ball[] = [
+    balls = [
       {
         x: canvas.width / 4,
         y: canvas.height / 4,
         dx: 0,
         dy: 0,
-        color: palette.color1,
-        ballColor: darkenColor(palette.color1, -10),
+        color: "",
+        ballColor: "",
       },
       {
         x: canvas.width / 4,
         y: (canvas.height / 4) * 3,
         dx: 0,
         dy: 0,
-        color: palette.color2,
-        ballColor: darkenColor(palette.color2, -10),
+        color: "",
+        ballColor: "",
       },
       {
         x: (canvas.width / 4) * 3,
         y: canvas.height / 4,
         dx: 0,
         dy: 0,
-        color: palette.color3,
-        ballColor: darkenColor(palette.color3, -10),
+        color: "",
+        ballColor: "",
       },
       {
         x: (canvas.width / 4) * 3,
         y: (canvas.height / 4) * 3,
         dx: 0,
         dy: 0,
-        color: palette.color4,
-        ballColor: darkenColor(palette.color4, -10),
+        color: "",
+        ballColor: "",
       },
     ];
 
-    // Click the canvas to pause
-    canvas.onclick = () => {
-      targetSpeedScale = targetSpeedScale ? 0 : 1;
-    }
+    nextColor();
+    canvas.onclick = nextColor;
 
     // Populate squares
     for (let i = 0; i < numSquaresX; i++) {
       squares[i] = [];
       for (let j = 0; j < numSquaresX; j++) {
         if (i < numSquaresX / 2) {
-          if (j < numSquaresY / 2) squares[i][j] = palette.color1;
-          else squares[i][j] = palette.color2;
+          if (j < numSquaresY / 2) squares[i][j] = palette.colors[0];
+          else squares[i][j] = palette.colors[1];
         } else {
-          if (j < numSquaresY / 2) squares[i][j] = palette.color3;
-          else squares[i][j] = palette.color4;
+          if (j < numSquaresY / 2) squares[i][j] = palette.colors[2];
+          else squares[i][j] = palette.colors[3];
         }
       }
     }
@@ -103,7 +94,7 @@
     }
 
     function drawSquares() {
-      let scores = [0, 0, 0, 0];
+      scores = [0, 0, 0, 0];
 
       for (let i = 0; i < numSquaresX; i++) {
         for (let j = 0; j < numSquaresX; j++) {
@@ -115,14 +106,12 @@
             SQUARE_SIZE
           );
 
-          if (squares[i][j] === palette.color1) scores[0]++;
-          if (squares[i][j] === palette.color2) scores[1]++;
-          if (squares[i][j] === palette.color3) scores[2]++;
-          if (squares[i][j] === palette.color4) scores[3]++;
+          if (squares[i][j] === palette.colors[0]) scores[0]++;
+          if (squares[i][j] === palette.colors[1]) scores[1]++;
+          if (squares[i][j] === palette.colors[2]) scores[2]++;
+          if (squares[i][j] === palette.colors[3]) scores[3]++;
         }
       }
-
-      scoreText.forEach((text, i) => text.innerText = scores[i].toString());
     }
 
     function checkSquareCollision(ball: Ball) {
@@ -181,6 +170,24 @@
         ball.dy = ball.dy > 0 ? MIN_SPEED : -MIN_SPEED;
     }
 
+    function nextColor() {
+      let prevIndex = paletteIndex;
+      paletteIndex = (paletteIndex + 1) % palettes.length;
+      palette = palettes[paletteIndex];
+
+      balls.forEach((ball, i) => {
+        ball.color = palette.colors[i];
+        ball.ballColor = darkenColor(ball.color, -10);
+      });
+
+      for (let i = 0; i < squares.length; i++) {
+        for (let j = 0; j < squares[i].length; j++) {
+          const square = squares[i][j];
+          squares[i][j] = palette.colors[palettes[prevIndex].colors.indexOf(square)];
+        }
+      }
+    }
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawSquares();
@@ -190,13 +197,11 @@
         checkSquareCollision(ball);
         checkBoundaryCollision(ball);
 
-        ball.x += ball.dx * speedScale;
-        ball.y += ball.dy * speedScale;
+        ball.x += ball.dx;
+        ball.y += ball.dy;
 
         addRandomness(ball);
       });
-
-      speedScale = lerp(speedScale, targetSpeedScale, 0.15);
 
       requestAnimationFrame(draw);
     }
@@ -227,20 +232,20 @@
 
   <div class="flex items-center justify-center text-sm">
     <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" bind:this={colorCircles[0]}></div>
-      <h2 class="font-bold" bind:this={scoreText[0]}>140</h2>
+      <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
+      <h2 class="font-bold">{scores[0]}</h2>
     </div>
     <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" bind:this={colorCircles[1]}></div>
-      <h2 class="font-bold" bind:this={scoreText[1]}>140</h2>
+      <div class="size-4 rounded-full" style:background={palette.colors[1]}></div>
+      <h2 class="font-bold">{scores[1]}</h2>
     </div>
     <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" bind:this={colorCircles[2]}></div>
-      <h2 class="font-bold" bind:this={scoreText[2]}>140</h2>
+      <div class="size-4 rounded-full" style:background={palette.colors[2]}></div>
+      <h2 class="font-bold">{scores[2]}</h2>
     </div>
     <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" bind:this={colorCircles[3]}></div>
-      <h2 class="font-bold" bind:this={scoreText[3]}>140</h2>
+      <div class="size-4 rounded-full" style:background={palette.colors[3]}></div>
+      <h2 class="font-bold">{scores[3]}</h2>
     </div>
   </div>
 </main>
