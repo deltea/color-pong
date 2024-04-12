@@ -5,7 +5,7 @@
   import "iconify-icon";
   import { onMount } from "svelte";
 
-  import { type Ball, darkenColor, lerp, radianToVector } from "$lib/utils";
+  import { type Ball, darkenColor, radianToVector } from "$lib/utils";
   import { type Palette, palettes } from "$lib/palettes";
 
   let canvas: HTMLCanvasElement;
