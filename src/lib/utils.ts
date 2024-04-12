@@ -1,3 +1,6 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export interface Ball {
   x: number;
   y: number;
@@ -25,4 +28,8 @@ export function darkenColor(color: string, percent: number) {
 
 export function lerp(x: number, y: number, t: number) {
   return x + t * (y - x);
+}
+
+export function cn(...values: ClassValue[]) {
+  return twMerge(clsx(values));
 }

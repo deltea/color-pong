@@ -1,8 +1,11 @@
 <script lang="ts">
   import "../global.css";
   import "@fontsource/montserrat-alternates";
+  import "@fontsource-variable/raleway";
   import "iconify-icon";
   import { onMount } from "svelte";
+  import { Select } from "bits-ui";
+
   import { type Ball, darkenColor, lerp, radianToVector } from "$lib/utils";
   import { type Palette, palettes } from "$lib/palettes";
 
@@ -207,7 +210,39 @@
   <title>Color Pong</title>
 </svelte:head>
 
-<main id="app" class="bg-background h-screen textwhite text-white flex flex-col justify-evenly items-center font-sans">
+<main
+  id="app"
+  class="bg-background h-screen textwhite text-white flex flex-col justify-evenly items-center font-sans relative"
+>
+  <div class="absolute left-4 top-4">
+    <Select.Root items={palettes}>
+      <Select.Trigger
+        class="flex px-4 py-2 text-lg gap-1.5 items-center rounded-lg bg-faded tracking-tight w-48 font-raleway"
+      >
+        <iconify-icon icon="ic:round-palette"></iconify-icon>
+        <Select.Value placeholder="Theme" />
+        <iconify-icon icon="material-symbols:keyboard-arrow-down-rounded" class="ml-auto"></iconify-icon>
+      </Select.Trigger>
+      <Select.Content
+        class="w-full rounded-lg p-1 outline-none bg-faded text-white"
+        sideOffset={8}
+      >
+        {#each palettes as palette}
+          <Select.Item
+            value={palette.value}
+            label={palette.value}
+            class="flex h-10 w-full select-none items-center rounded-lg py-2 px-4 text-base outline-none duration-150 data-[highlighted]:bg-background"
+          >
+            {palette.value}
+            <Select.ItemIndicator class="ml-auto flex items-center" asChild={false}>
+              <iconify-icon icon="mingcute:check-fill"></iconify-icon>
+            </Select.ItemIndicator>
+          </Select.Item>
+        {/each}
+      </Select.Content>
+    </Select.Root>
+  </div>
+
   <h1 class="text-5xl">Color <b class="font-black">Pong</b></h1>
 
   <div class="size-[25rem]">
