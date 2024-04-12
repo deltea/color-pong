@@ -1,8 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [],
+  content: ["./src/*/**.{html,js,ts,svelte}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Montserrat Alternates"],
+      },
+      colors: {
+        "background": "#222",
+        "faded": "#888",
+      }
+    },
   },
   plugins: [],
 }
