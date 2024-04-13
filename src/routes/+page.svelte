@@ -273,8 +273,15 @@
           {#each palettes as p, i}
             <button
               on:click={() => (setPalette(i))}
-              class="w-full p-4 flex gap-4 hover:bg-background duration-150 rounded-lg active:scale-[98%]"
+              class="w-full p-4 flex items-center gap-4 hover:bg-background duration-150 rounded-lg active:scale-[98%]"
             >
+              <div class="size-8 grid grid-rows-2 grid-cols-2">
+                <div class="rounded-tl-full" style:background={p.colors[0]}></div>
+                <div class="rounded-tr-full" style:background={p.colors[1]}></div>
+                <div class="rounded-bl-full" style:background={p.colors[2]}></div>
+                <div class="rounded-br-full" style:background={p.colors[3]}></div>
+              </div>
+
               <h3>{p.value}</h3>
               {#if p === palette}
                 <iconify-icon
