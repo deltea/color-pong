@@ -224,6 +224,7 @@
 >
   <div class="flex flex-col items-center justify-evenly h-full flex-grow">
     <h1 class="text-5xl">Color <b class="font-black">Pong</b></h1>
+
     <div class="size-[25rem]">
       <canvas
         bind:this={canvas}
@@ -233,6 +234,7 @@
         height="500"
       ></canvas>
     </div>
+
     <div class="flex items-center justify-center text-sm">
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
@@ -277,8 +279,8 @@
             >
               <div class="size-8 grid grid-rows-2 grid-cols-2">
                 <div class="rounded-tl-full" style:background={p.colors[0]}></div>
-                <div class="rounded-tr-full" style:background={p.colors[1]}></div>
-                <div class="rounded-bl-full" style:background={p.colors[2]}></div>
+                <div class="rounded-tr-full" style:background={p.colors[2]}></div>
+                <div class="rounded-bl-full" style:background={p.colors[1]}></div>
                 <div class="rounded-br-full" style:background={p.colors[3]}></div>
               </div>
 
@@ -296,4 +298,13 @@
       </div>
     </div>
   {/if}
+
+  <footer class="absolute flex bottom-2 left-4 text-sm gap-1">
+    made with
+    <a href="https://svelte.dev" target="_blank" class="flex items-start">
+      <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
+    </a>
+    and
+    <iconify-icon icon="mingcute:heart-line" class="text-lg"></iconify-icon>
+  </footer>
 </main>
