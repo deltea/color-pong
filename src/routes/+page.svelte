@@ -4,14 +4,17 @@
   import "@fontsource-variable/raleway";
   import "iconify-icon";
   import { onMount } from "svelte";
+  import { fade, slide } from "svelte/transition";
+  import { ScrollArea } from "bits-ui";
 
-  import { type Ball, darkenColor, radianToVector } from "$lib/utils";
+  import { type Ball, darkenColor, radianToVector, cn } from "$lib/utils";
   import { type Palette, palettes } from "$lib/palettes";
 
   let canvas: HTMLCanvasElement;
   let scores = [0, 0, 0, 0];
-  let paletteIndex = Math.floor(Math.random() * palettes.length);
+  let paletteIndex = 0;
   let palette: Palette = palettes[paletteIndex];
+  let panelOpen = false;
 
   let balls: Ball[];
   let squares: string[][] = [[]];
@@ -19,6 +22,58 @@
   const SQUARE_SIZE = 10;
   const BALL_SPEED_RANGE = 50;
   const BALL_SPEED = 8;
+
+  function checkBoundaryCollision(ball: Ball) {
+    if (
+      ball.x + ball.dx > canvas.width - SQUARE_SIZE / 2 ||
+      ball.x + ball.dx < SQUARE_SIZE / 2
+    ) {
+      ball.dx = -ball.dx;
+    }
+
+    if (
+      ball.y + ball.dy > canvas.height - SQUARE_SIZE / 2 ||
+      ball.y + ball.dy < SQUARE_SIZE / 2
+    ) {
+      ball.dy = -ball.dy;
+    }
+  }
+
+  function addRandomness(ball: Ball) {
+    ball.dx += Math.random() * 0.01 - 0.005;
+    ball.dy += Math.random() * 0.01 - 0.005;
+
+    const MAX_SPEED = BALL_SPEED + BALL_SPEED_RANGE;
+    const MIN_SPEED = BALL_SPEED - BALL_SPEED_RANGE;
+
+    // Limit the speed of the ball
+    ball.dx = Math.min(Math.max(ball.dx, -MAX_SPEED), MAX_SPEED);
+    ball.dy = Math.min(Math.max(ball.dy, -MAX_SPEED), MAX_SPEED);
+
+    // Make sure the ball always maintains a minimum speed
+    if (Math.abs(ball.dx) < MIN_SPEED)
+      ball.dx = ball.dx > 0 ? MIN_SPEED : -MIN_SPEED;
+    if (Math.abs(ball.dy) < MIN_SPEED)
+      ball.dy = ball.dy > 0 ? MIN_SPEED : -MIN_SPEED;
+  }
+
+  function setPalette(index: number) {
+    let prevIndex = paletteIndex;
+    paletteIndex = index;
+    palette = palettes[index];
+
+    balls.forEach((ball, i) => {
+      ball.color = palette.colors[i];
+      ball.ballColor = darkenColor(ball.color, -10);
+    });
+
+    for (let i = 0; i < squares.length; i++) {
+      for (let j = 0; j < squares[i].length; j++) {
+        const square = squares[i][j];
+        squares[i][j] = palette.colors[palettes[prevIndex].colors.indexOf(square)];
+      }
+    }
+  }
 
   onMount(() => {
     const numSquaresX = canvas.width / SQUARE_SIZE;
@@ -61,8 +116,8 @@
       },
     ];
 
-    nextColor();
-    canvas.onclick = nextColor;
+    setPalette(Math.floor(Math.random() * palettes.length));
+    canvas.onclick = () => panelOpen = !panelOpen;
 
     // Populate squares
     for (let i = 0; i < numSquaresX; i++) {
@@ -136,57 +191,6 @@
       }
     }
 
-    function checkBoundaryCollision(ball: Ball) {
-      if (
-        ball.x + ball.dx > canvas.width - SQUARE_SIZE / 2 ||
-        ball.x + ball.dx < SQUARE_SIZE / 2
-      ) {
-        ball.dx = -ball.dx;
-      }
-
-      if (
-        ball.y + ball.dy > canvas.height - SQUARE_SIZE / 2 ||
-        ball.y + ball.dy < SQUARE_SIZE / 2
-      ) {
-        ball.dy = -ball.dy;
-      }
-    }
-
-    function addRandomness(ball: Ball) {
-      ball.dx += Math.random() * 0.01 - 0.005;
-      ball.dy += Math.random() * 0.01 - 0.005;
-
-      const MAX_SPEED = BALL_SPEED + BALL_SPEED_RANGE;
-      const MIN_SPEED = BALL_SPEED - BALL_SPEED_RANGE;
-
-      // Limit the speed of the ball
-      ball.dx = Math.min(Math.max(ball.dx, -MAX_SPEED), MAX_SPEED);
-      ball.dy = Math.min(Math.max(ball.dy, -MAX_SPEED), MAX_SPEED);
-
-      // Make sure the ball always maintains a minimum speed
-      if (Math.abs(ball.dx) < MIN_SPEED)
-        ball.dx = ball.dx > 0 ? MIN_SPEED : -MIN_SPEED;
-      if (Math.abs(ball.dy) < MIN_SPEED)
-        ball.dy = ball.dy > 0 ? MIN_SPEED : -MIN_SPEED;
-    }
-
-    function nextColor() {
-      let prevIndex = paletteIndex;
-      paletteIndex = (paletteIndex + 1) % palettes.length;
-      palette = palettes[paletteIndex];
-
-      balls.forEach((ball, i) => {
-        ball.color = palette.colors[i];
-        ball.ballColor = darkenColor(ball.color, -10);
-      });
-
-      for (let i = 0; i < squares.length; i++) {
-        for (let j = 0; j < squares[i].length; j++) {
-          const square = squares[i][j];
-          squares[i][j] = palette.colors[palettes[prevIndex].colors.indexOf(square)];
-        }
-      }
-    }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -216,36 +220,73 @@
 
 <main
   id="app"
-  class="bg-background h-screen textwhite text-white flex flex-col justify-evenly items-center font-sans relative"
+  class="bg-background h-screen textwhite text-white flex w-full items-center font-sans relative"
 >
-  <h1 class="text-5xl">Color <b class="font-black">Pong</b></h1>
-
-  <div class="size-[25rem]">
-    <canvas
-      bind:this={canvas}
-      id="canvas"
-      class="rounded-md shadow-2xl cursor-pointer w-full h-full"
-      width="500"
-      height="500"
-    ></canvas>
+  <div class="flex flex-col items-center justify-evenly h-full flex-grow">
+    <h1 class="text-5xl">Color <b class="font-black">Pong</b></h1>
+    <div class="size-[25rem]">
+      <canvas
+        bind:this={canvas}
+        id="canvas"
+        class="rounded-md hover:scale-[103%] shadow-2xl cursor-pointer w-full h-full duration-300"
+        width="500"
+        height="500"
+      ></canvas>
+    </div>
+    <div class="flex items-center justify-center text-sm">
+      <div class="flex items-center justify-center gap-2 w-[7rem]">
+        <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
+        <h2 class="font-bold">{scores[0]}</h2>
+      </div>
+      <div class="flex items-center justify-center gap-2 w-[7rem]">
+        <div class="size-4 rounded-full" style:background={palette.colors[1]}></div>
+        <h2 class="font-bold">{scores[1]}</h2>
+      </div>
+      <div class="flex items-center justify-center gap-2 w-[7rem]">
+        <div class="size-4 rounded-full" style:background={palette.colors[2]}></div>
+        <h2 class="font-bold">{scores[2]}</h2>
+      </div>
+      <div class="flex items-center justify-center gap-2 w-[7rem]">
+        <div class="size-4 rounded-full" style:background={palette.colors[3]}></div>
+        <h2 class="font-bold">{scores[3]}</h2>
+      </div>
+    </div>
   </div>
 
-  <div class="flex items-center justify-center text-sm">
-    <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
-      <h2 class="font-bold">{scores[0]}</h2>
+  {#if panelOpen}
+    <div
+      transition:slide={{ duration: 300, axis: "x" }}
+      class="p-10 h-full"
+    >
+      <div class="rounded-2xl bg-faded h-full w-[36vw] shadow-lg py-6 px-4">
+        <div class="flex justify-between items-center text-2xl font-raleway pb-4 border-b-[1.5px] border-b-white">
+          <h2 class="font-semibold ml-4">Themes</h2>
+          <button
+            on:click={() => (panelOpen = false)}
+            class="flex items-center mr-4"
+          >
+            <iconify-icon icon="material-symbols:close-rounded" class="text-3xl"></iconify-icon>
+          </button>
+        </div>
+
+        <div class="w-full h-[90%] overflow-auto no-scrollbar pt-4">
+          {#each palettes as p, i}
+            <button
+              on:click={() => (setPalette(i))}
+              class="w-full p-4 flex gap-4 hover:bg-background duration-150 rounded-lg active:scale-[98%]"
+            >
+              <h3>{p.value}</h3>
+              {#if p === palette}
+                <iconify-icon
+                  icon="mingcute:check-fill"
+                  class="text-xl ml-auto"
+                  transition:fade={{ duration: 50, }}
+                ></iconify-icon>
+              {/if}
+            </button>
+          {/each}
+        </div>
+      </div>
     </div>
-    <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" style:background={palette.colors[1]}></div>
-      <h2 class="font-bold">{scores[1]}</h2>
-    </div>
-    <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" style:background={palette.colors[2]}></div>
-      <h2 class="font-bold">{scores[2]}</h2>
-    </div>
-    <div class="flex items-center justify-center gap-2 w-[7rem]">
-      <div class="size-4 rounded-full" style:background={palette.colors[3]}></div>
-      <h2 class="font-bold">{scores[3]}</h2>
-    </div>
-  </div>
+  {/if}
 </main>
