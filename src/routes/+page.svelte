@@ -13,7 +13,7 @@
   let scores = [0, 0, 0, 0];
   let paletteIndex = 0;
   let palette: Palette = palettes[paletteIndex];
-  let panelOpen = false;
+  let themesOpen = false;
 
   let balls: Ball[];
   let squares: string[][] = [[]];
@@ -116,7 +116,7 @@
     ];
 
     setPalette(Math.floor(Math.random() * palettes.length));
-    canvas.onclick = () => panelOpen = !panelOpen;
+    canvas.onclick = () => themesOpen = !themesOpen;
 
     // Populate squares
     for (let i = 0; i < numSquaresX; i++) {
@@ -222,7 +222,7 @@
   class="bg-background h-screen textwhite text-white flex w-full items-center font-sans relative"
 >
   <div class="flex flex-col items-center justify-evenly h-full flex-grow">
-    <div class="flex flex-col items-center gap-2">
+    <div class="flex flex-col items-center gap-1">
       <h1 class="text-5xl font-light">
         Color <b class="font-extrabold">Pong</b>
       </h1>
@@ -237,7 +237,7 @@
         </a>
 
         <button
-          on:click={() => (panelOpen = !panelOpen)}
+          on:click={() => (themesOpen = !themesOpen)}
           class="flex justify-center h-full items-center border-y-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-2"
         >
           <iconify-icon icon="mingcute:palette-fill" class="text-lg"></iconify-icon>
@@ -251,7 +251,7 @@
       </div>
     </div>
 
-    <div class="size-[25rem]">
+    <div class="size-[25rem] relative">
       <canvas
         bind:this={canvas}
         id="canvas"
@@ -259,6 +259,32 @@
         width="500"
         height="500"
       ></canvas>
+
+      {#if themesOpen}
+        <div
+          class="absolute left-0 top-0 w-full h-full rounded-md bg-black/80 grid grid-cols-3 overflow-auto no-scrollbar"
+          transition:fade={{ duration: 150 }}
+        >
+          {#each palettes as p, i}
+            <button
+              on:click={() => {
+                setPalette(i);
+                themesOpen = false;
+              }}
+              class="flex flex-col items-center justify-center gap-2 h-[7.5rem] duration-75 hover:scale-110 active:scale-100"
+            >
+              <div class="size-8 grid grid-rows-2 grid-cols-2">
+                <div class="rounded-tl-full" style:background={p.colors[0]}></div>
+                <div class="rounded-tr-full" style:background={p.colors[2]}></div>
+                <div class="rounded-bl-full" style:background={p.colors[1]}></div>
+                <div class="rounded-br-full" style:background={p.colors[3]}></div>
+              </div>
+
+              <h3>{p.value}</h3>
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
 
     <div class="flex items-center justify-center text-sm">
@@ -281,7 +307,7 @@
     </div>
   </div>
 
-  {#if panelOpen}
+  <!-- {#if themesOpen}
     <div
       transition:slide={{ duration: 300, axis: "x" }}
       class="p-10 h-full"
@@ -290,7 +316,7 @@
         <div class="flex justify-between items-center text-2xl pb-4 border-b-[1.5px] border-b-white">
           <h2 class="font-semibold ml-4">Themes</h2>
           <button
-            on:click={() => (panelOpen = false)}
+            on:click={() => (themesOpen = false)}
             class="flex items-center mr-4"
           >
             <iconify-icon icon="material-symbols:close-rounded" class="text-3xl"></iconify-icon>
@@ -323,7 +349,7 @@
         </div>
       </div>
     </div>
-  {/if}
+  {/if} -->
 
   <footer class="absolute flex bottom-2 left-4 text-sm gap-1">
     made with

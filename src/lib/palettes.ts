@@ -24,4 +24,29 @@ export const palettes: Palette[] = [
     value: "Coldfire",
     colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
   },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+  {
+    value: "Coldfire",
+    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+  },
+
 ];
