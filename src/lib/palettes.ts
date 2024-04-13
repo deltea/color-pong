@@ -25,28 +25,31 @@ export const palettes: Palette[] = [
     colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Dustbyte",
+    colors: ["#788374", "#f5e9bf", "#aa644d", "#372a39"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Cherrymelon",
+    colors: ["#fcdeea", "#ff4d6d", "#265935", "#012824"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Pillowy",
+    colors: ["#ffe2db", "#d9a7c6", "#8d89c7", "#755f9c"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Coral",
+    colors: ["#ffd0a4", "#f4949c", "#7c9aac", "#68518a"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Neon",
+    colors: ["#474949", "#ff4adc", "#3dff98", "#f0f6f0"]
   },
   {
-    value: "Coldfire",
-    colors: ["#46425e", "#5b768d", "#d17c7c", "#f6c6a8"]
+    value: "Soft Serve",
+    colors: ["#e64270", "#64c1bd", "#ead762", "#e3e6e8"]
   },
-
+  {
+    value: "Chill",
+    colors: ["#564756", "#507dba", "#5acca0", "#e5f7d2"]
+  },
 ];

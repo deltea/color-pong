@@ -273,11 +273,15 @@
               }}
               class="flex flex-col items-center justify-center gap-2 h-[7.5rem] duration-75 hover:scale-110 active:scale-100"
             >
-              <div class="size-8 grid grid-rows-2 grid-cols-2">
+              <div class="size-8 grid grid-rows-2 grid-cols-2 relative">
                 <div class="rounded-tl-full" style:background={p.colors[0]}></div>
                 <div class="rounded-tr-full" style:background={p.colors[2]}></div>
                 <div class="rounded-bl-full" style:background={p.colors[1]}></div>
                 <div class="rounded-br-full" style:background={p.colors[3]}></div>
+
+                {#if p === palette}
+                  <iconify-icon icon="mingcute:check-fill" class="text-lg absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"></iconify-icon>
+                {/if}
               </div>
 
               <h3>{p.value}</h3>
@@ -312,7 +316,11 @@
     <a href="https://svelte.dev" target="_blank" class="flex items-start">
       <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
     </a>
-    and
+    x
     <iconify-icon icon="mingcute:heart-line" class="text-lg"></iconify-icon>
+    x
+    <a href="https://lospec.com/palette-list" target="_blank" class="flex items-start">
+      <iconify-icon icon="simple-icons:lospec" class="text-md mt-0.5"></iconify-icon>
+    </a>
   </footer>
 </main>
