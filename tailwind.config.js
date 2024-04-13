@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        raleway: ["Raleway Variable"],
-        sans: ["Montserrat Alternates"],
+        sans: ["Raleway Variable"],
+        // sans: ["Montserrat Alternates"],
       },
       colors: {
         "background": "#222",

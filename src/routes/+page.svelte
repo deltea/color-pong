@@ -5,7 +5,6 @@
   import "iconify-icon";
   import { onMount } from "svelte";
   import { fade, slide } from "svelte/transition";
-  import { ScrollArea } from "bits-ui";
 
   import { type Ball, darkenColor, radianToVector, cn } from "$lib/utils";
   import { type Palette, palettes } from "$lib/palettes";
@@ -223,7 +222,34 @@
   class="bg-background h-screen textwhite text-white flex w-full items-center font-sans relative"
 >
   <div class="flex flex-col items-center justify-evenly h-full flex-grow">
-    <h1 class="text-5xl">Color <b class="font-black">Pong</b></h1>
+    <div class="flex flex-col items-center gap-2">
+      <h1 class="text-5xl font-light">
+        Color <b class="font-extrabold">Pong</b>
+      </h1>
+
+      <div class="flex justify-center items-center">
+        <a
+          href="https://github.com/thcheetah777/color-pong"
+          target="_blank"
+          class="flex justify-center rounded-l-full h-full items-center border-y-2 border-l-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pl-2.5"
+        >
+          <iconify-icon icon="mingcute:github-fill" class="text-xl"></iconify-icon>
+        </a>
+
+        <button
+          on:click={() => (panelOpen = !panelOpen)}
+          class="flex justify-center h-full items-center border-y-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-2"
+        >
+          <iconify-icon icon="mingcute:palette-fill" class="text-lg"></iconify-icon>
+        </button>
+
+        <button
+          class="flex justify-center rounded-r-full h-full items-center border-y-2 border-r-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pr-2.5"
+        >
+          <iconify-icon icon="mingcute:fullscreen-2-fill" class="text-lg"></iconify-icon>
+        </button>
+      </div>
+    </div>
 
     <div class="size-[25rem]">
       <canvas
@@ -261,7 +287,7 @@
       class="p-10 h-full"
     >
       <div class="rounded-2xl bg-faded h-full w-[36vw] shadow-lg py-6 px-4">
-        <div class="flex justify-between items-center text-2xl font-raleway pb-4 border-b-[1.5px] border-b-white">
+        <div class="flex justify-between items-center text-2xl pb-4 border-b-[1.5px] border-b-white">
           <h2 class="font-semibold ml-4">Themes</h2>
           <button
             on:click={() => (panelOpen = false)}
