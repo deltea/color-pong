@@ -329,19 +329,19 @@
     <div class="flex items-center justify-center text-sm">
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
-        <h2 class="font-bold">{scores[0]}</h2>
+        <h2 class="font-semibold">{scores[0]}</h2>
       </div>
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[1]}></div>
-        <h2 class="font-bold">{scores[1]}</h2>
+        <h2 class="font-semibold">{scores[1]}</h2>
       </div>
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[2]}></div>
-        <h2 class="font-bold">{scores[2]}</h2>
+        <h2 class="font-semibold">{scores[2]}</h2>
       </div>
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[3]}></div>
-        <h2 class="font-bold">{scores[3]}</h2>
+        <h2 class="font-semibold">{scores[3]}</h2>
       </div>
     </div>
 
