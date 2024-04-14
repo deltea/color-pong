@@ -14,6 +14,7 @@
   let paletteIndex = 0;
   let palette: Palette = palettes[paletteIndex];
   let themesOpen = false;
+  let zenMode = false;
 
   let balls: Ball[];
   let squares: string[][] = [[]];
@@ -71,6 +72,15 @@
         const square = squares[i][j];
         squares[i][j] = palette.colors[palettes[prevIndex].colors.indexOf(square)];
       }
+    }
+  }
+
+  function setZenMode(enabled: boolean) {
+    zenMode = enabled;
+    if (zenMode) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
   }
 
@@ -210,6 +220,15 @@
     }
 
     requestAnimationFrame(draw);
+
+    document.addEventListener("fullscreenchange", fullscreenHandler, false);
+    document.addEventListener("mozfullscreenchange", fullscreenHandler, false);
+    document.addEventListener("MSFullscreenChange", fullscreenHandler, false);
+    document.addEventListener("webkitfullscreenchange", fullscreenHandler, false);
+
+    function fullscreenHandler() {
+      setZenMode(document.fullscreenElement !== null);
+    }
   });
 </script>
 
@@ -221,37 +240,52 @@
   id="app"
   class="bg-background h-screen textwhite text-white flex w-full items-center font-sans relative"
 >
+  {#if zenMode}
+    <button
+      on:click={() => setZenMode(false)}
+      class="absolute left-10 top-10 text-2xl"
+    >
+      <iconify-icon icon="mingcute:close-fill"></iconify-icon>
+    </button>
+  {/if}
+
   <div class="flex flex-col items-center justify-evenly h-full flex-grow">
-    <div class="flex flex-col items-center gap-1">
-      <h1 class="text-5xl font-light">
-        Color <b class="font-extrabold">Pong</b>
-      </h1>
+    {#if !zenMode}
+      <div class="flex flex-col items-center gap-1">
+        <h1 class="text-5xl font-light">
+          Color <b class="font-extrabold">Pong</b>
+        </h1>
 
-      <div class="flex justify-center items-center">
-        <a
-          href="https://github.com/thcheetah777/color-pong"
-          target="_blank"
-          class="flex justify-center rounded-l-full h-full items-center border-y-2 border-l-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pl-2.5"
-        >
-          <iconify-icon icon="mingcute:github-fill" class="text-xl"></iconify-icon>
-        </a>
+        <div class="flex justify-center items-center">
+          <a
+            href="https://github.com/thcheetah777/color-pong"
+            target="_blank"
+            class="flex justify-center rounded-l-full h-full items-center border-y-2 border-l-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pl-2.5"
+          >
+            <iconify-icon icon="mingcute:github-fill" class="text-xl"></iconify-icon>
+          </a>
 
-        <button
-          on:click={() => (themesOpen = !themesOpen)}
-          class="flex justify-center h-full items-center border-y-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-2"
-        >
-          <iconify-icon icon="mingcute:palette-fill" class="text-lg"></iconify-icon>
-        </button>
+          <button
+            on:click={() => (themesOpen = !themesOpen)}
+            class="flex justify-center h-full items-center border-y-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-2"
+          >
+            <iconify-icon icon="mingcute:palette-fill" class="text-lg"></iconify-icon>
+          </button>
 
-        <button
-          class="flex justify-center rounded-r-full h-full items-center border-y-2 border-r-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pr-2.5"
-        >
-          <iconify-icon icon="mingcute:fullscreen-2-fill" class="text-lg"></iconify-icon>
-        </button>
+          <button
+            on:click={() => setZenMode(true)}
+            class="flex justify-center rounded-r-full h-full items-center border-y-2 border-r-2 border-white hover:bg-white hover:text-background duration-150 py-1.5 px-1.5 pr-2.5"
+          >
+            <iconify-icon icon="mingcute:fullscreen-2-fill" class="text-lg"></iconify-icon>
+          </button>
+        </div>
       </div>
-    </div>
+    {/if}
 
-    <div class="size-[25rem] relative">
+    <div class={cn(
+      "relative duration-150",
+      zenMode ? "size-[80dvh]" : "size-[25rem]"
+    )}>
       <canvas
         bind:this={canvas}
         id="canvas"
@@ -291,6 +325,7 @@
       {/if}
     </div>
 
+  {#if !zenMode}
     <div class="flex items-center justify-center text-sm">
       <div class="flex items-center justify-center gap-2 w-[7rem]">
         <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
@@ -309,18 +344,18 @@
         <h2 class="font-bold">{scores[3]}</h2>
       </div>
     </div>
-  </div>
 
-  <footer class="absolute flex bottom-2 left-4 text-sm gap-1">
-    made with
-    <a href="https://svelte.dev" target="_blank" class="flex items-start">
-      <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
-    </a>
-    x
-    <iconify-icon icon="mingcute:heart-line" class="text-lg"></iconify-icon>
-    x
-    <a href="https://lospec.com/palette-list" target="_blank" class="flex items-start">
-      <iconify-icon icon="simple-icons:lospec" class="text-md mt-0.5"></iconify-icon>
-    </a>
-  </footer>
+    <footer class="absolute flex bottom-2 left-4 text-sm gap-1">
+      made with
+      <a href="https://svelte.dev" target="_blank" class="flex items-start">
+        <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
+      </a>
+      x
+      <iconify-icon icon="mingcute:heart-line" class="text-lg"></iconify-icon>
+      x
+      <a href="https://lospec.com/palette-list" target="_blank" class="flex items-start">
+        <iconify-icon icon="simple-icons:lospec" class="text-md mt-0.5"></iconify-icon>
+      </a>
+    </footer>
+  {/if}
 </main>
