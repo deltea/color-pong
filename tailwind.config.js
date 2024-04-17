@@ -10,6 +10,12 @@ export default {
       colors: {
         "background": "#222",
         "faded": "#3c3c3c",
+      },
+      height: {
+        "screen": "100dvh",
+      },
+      scale: {
+        "xs": "103%",
       }
     },
   },

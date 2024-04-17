@@ -1,8 +1,8 @@
 <script lang="ts">
-  import "../global.css";
   import "@fontsource/montserrat-alternates";
   import "@fontsource-variable/raleway";
   import "iconify-icon";
+  import "../global.css";
   import { onMount } from "svelte";
   import { fade, slide } from "svelte/transition";
 
@@ -284,19 +284,19 @@
 
     <div class={cn(
       "relative duration-150",
-      zenMode ? "size-[80dvh]" : "md:size-[25rem] w-[80dvw] aspect-square"
+      zenMode ? "md:size-[40dvw] size-[80dvw]" : "md:size-[25rem] w-[80dvw] aspect-square"
     )}>
       <canvas
         bind:this={canvas}
         id="canvas"
-        class="rounded-md hover:scale-[103%] shadow-2xl cursor-pointer w-full h-full duration-300"
+        class="rounded-md hover:scale-xs shadow-2xl cursor-pointer w-full h-full duration-300 peer"
         width="500"
         height="500"
       ></canvas>
 
       {#if themesOpen}
         <div
-          class="absolute left-0 top-0 w-full h-full rounded-md bg-black/80 grid grid-cols-3 overflow-auto no-scrollbar"
+          class="absolute left-0 top-0 w-full h-full rounded-md bg-black/80 grid grid-cols-3 overflow-auto no-scrollbar peer-hover:scale-xs"
           transition:fade={{ duration: 150 }}
         >
           {#each palettes as p, i}
@@ -326,26 +326,26 @@
     </div>
 
   {#if !zenMode}
-    <div class="flex items-center justify-center text-sm">
-      <div class="flex items-center justify-center gap-2 w-[7rem]">
+    <div class="flex md:justify-center justify-evenly items-center w-full text-sm">
+      <div class="flex items-center justify-center gap-2 md:w-[7rem] w-auto">
         <div class="size-4 rounded-full" style:background={palette.colors[0]}></div>
         <h2 class="font-semibold">{scores[0]}</h2>
       </div>
-      <div class="flex items-center justify-center gap-2 w-[7rem]">
+      <div class="flex items-center justify-center gap-2 md:w-[7rem] w-auto">
         <div class="size-4 rounded-full" style:background={palette.colors[1]}></div>
         <h2 class="font-semibold">{scores[1]}</h2>
       </div>
-      <div class="flex items-center justify-center gap-2 w-[7rem]">
+      <div class="flex items-center justify-center gap-2 md:w-[7rem] w-auto">
         <div class="size-4 rounded-full" style:background={palette.colors[2]}></div>
         <h2 class="font-semibold">{scores[2]}</h2>
       </div>
-      <div class="flex items-center justify-center gap-2 w-[7rem]">
+      <div class="flex items-center justify-center gap-2 md:w-[7rem] w-auto">
         <div class="size-4 rounded-full" style:background={palette.colors[3]}></div>
         <h2 class="font-semibold">{scores[3]}</h2>
       </div>
     </div>
 
-    <footer class="absolute flex bottom-2 md:left-4 left-1/2 -translate-x-1/2 text-sm gap-1">
+    <footer class="absolute flex bottom-2 md:left-4 md:translate-x-0 left-1/2 -translate-x-1/2 text-sm gap-1">
       made with
       <a href="https://svelte.dev" target="_blank" class="flex items-start">
         <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
