@@ -238,7 +238,7 @@
 
 <main
   id="app"
-  class="bg-background h-screen textwhite text-white flex w-full items-center font-sans relative"
+  class="bg-background h-screen text-white flex w-full items-center font-sans relative"
 >
   {#if zenMode}
     <button
@@ -249,7 +249,7 @@
     </button>
   {/if}
 
-  <div class="flex flex-col items-center justify-evenly h-full flex-grow">
+  <div class="flex flex-col items-center justify-evenly h-full flex-grow w-full">
     {#if !zenMode}
       <div class="flex flex-col items-center gap-1">
         <h1 class="text-5xl font-light">
@@ -284,7 +284,7 @@
 
     <div class={cn(
       "relative duration-150",
-      zenMode ? "size-[80dvh]" : "size-[25rem]"
+      zenMode ? "size-[80dvh]" : "md:size-[25rem] w-[80dvw] aspect-square"
     )}>
       <canvas
         bind:this={canvas}
@@ -345,7 +345,7 @@
       </div>
     </div>
 
-    <footer class="absolute flex bottom-2 left-4 text-sm gap-1">
+    <footer class="absolute flex bottom-2 md:left-4 left-1/2 -translate-x-1/2 text-sm gap-1">
       made with
       <a href="https://svelte.dev" target="_blank" class="flex items-start">
         <iconify-icon icon="ri:svelte-line" class="text-base"></iconify-icon>
